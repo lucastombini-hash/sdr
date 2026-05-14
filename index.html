@@ -511,11 +511,8 @@
   }
 
   async function gerar() {
-    const apiKey = document.getElementById('apiKey').value.trim();
     const script = document.getElementById('scriptInput').value.trim();
-
-    if (!apiKey) { showError('⚠ Insira sua API Key da Anthropic antes de continuar.'); return; }
-    if (!script) { showError('⚠ Cole a transcrição da ligação antes de gerar o briefing.'); return; }
+    if (!script) { showError('Cole a transcricao da ligacao antes de gerar o briefing.'); return; }
 
     document.getElementById('errorBox').style.display = 'none';
     document.getElementById('result').style.display = 'none';
