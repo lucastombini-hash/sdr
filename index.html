@@ -430,6 +430,12 @@
     display: none;
     margin-top: 12px;
   }
+
+  .nav-pills { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+  .pill { padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; border: 1px solid var(--border2); color: var(--text2); transition: all 0.2s; font-family: var(--font-body); }
+  .pill:hover { border-color: var(--accent); color: var(--accent); }
+  .active-green { background: rgba(0,229,160,0.10); border-color: rgba(0,229,160,0.3) !important; color: var(--accent) !important; }
+
 </style>
 </head>
 <body>
@@ -443,6 +449,11 @@
     <h1>Resumo <span>SDR</span></h1>
     <p class="subtitle">Cole a transcrição da ligação e receba o briefing mastigado para o closer fechar.</p>
   </header>
+
+  <div style="display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;">
+    <a href="/index.html" style="padding:8px 18px;border-radius:20px;font-size:13px;text-decoration:none;border:1px solid rgba(0,229,160,0.3);color:#00E5A0;background:rgba(0,229,160,0.10);font-family:var(--font-body);">↗ Resumo SDR</a>
+    <a href="/analisar.html" style="padding:8px 18px;border-radius:20px;font-size:13px;text-decoration:none;border:1px solid #2E3548;color:#8B92A8;font-family:var(--font-body);">⬡ Analista de Ligacao</a>
+  </div>
 
   <!-- INPUT -->
   <!-- INPUT -->
@@ -480,23 +491,9 @@
 </div>
 
 <script>
-  // Load saved key
-  window.addEventListener('load', () => {
-    const k = localStorage.getItem('trafega_apikey');
-    if (k) {
-      document.getElementById('apiKey').value = k;
-      document.getElementById('keySaved').style.display = 'inline-flex';
-    }
-  });
 
-  function saveKey() {
-    const k = document.getElementById('apiKey').value.trim();
-    if (!k) return;
-    localStorage.setItem('trafega_apikey', k);
-    const el = document.getElementById('keySaved');
-    el.style.display = 'inline-flex';
-    el.textContent = '✓ Chave salva';
-  }
+
+
 
   function limpar() {
     document.getElementById('scriptInput').value = '';
