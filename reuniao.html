@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisador de Reuniao de Vendas — Trafega</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0D0F14; --surface: #13161D; --surface2: #1A1E28;
+    --border: #252A38; --border2: #2E3548;
+    --accent: #00E5A0; --red: #FF4D6A; --amber: #FFB547;
+    --blue: #4D9EFF; --purple: #A78BFA; --rose: #F43F5E;
+    --text: #E8EBF2; --text2: #8B92A8; --text3: #545C74;
+    --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif;
+    --radius: 10px; --radius-lg: 14px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+  .app { max-width: 820px; margin: 0 auto; padding: 0 20px 80px; }
+
+  header { padding: 40px 0 28px; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rose); box-shadow: 0 0 12px var(--rose); animation: pulse 2.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;}50%{opacity:0.5;} }
+  .logo-label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--rose); }
+  h1 { font-family: var(--font-display); font-size: clamp(22px,5vw,32px); font-weight: 800; letter-spacing: -0.02em; }
+  h1 span { color: var(--rose); }
+  .subtitle { font-size: 14px; color: var(--text2); margin-top: 6px; font-weight: 300; }
+
+  .nav { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+  .nav a { padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; border: 1px solid var(--border2); color: var(--text2); font-family: var(--font-body); transition: all 0.2s; }
+  .nav a:hover { border-color: var(--accent); color: var(--accent); }
+  .nav a.active { background: rgba(244,63,94,0.10); border-color: rgba(244,63,94,0.3); color: var(--rose); }
+
+  .section-label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .section-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--rose); }
+
+  textarea { width: 100%; min-height: 180px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; font-family: var(--font-body); font-size: 14px; color: var(--text); line-height: 1.7; outline: none; resize: vertical; }
+  textarea::placeholder { color: var(--text3); }
+
+  .actions { display: flex; gap: 10px; margin-top: 12px; }
+  .btn-main { flex: 1; background: var(--rose); color: #fff; border: none; border-radius: var(--radius); padding: 13px 24px; font-family: var(--font-display); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-main:hover { background: #FB7185; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(244,63,94,0.25); }
+  .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-clear { background: transparent; border: 1px solid var(--border2); border-radius: var(--radius); padding: 13px 18px; color: var(--text2); font-size: 13px; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+  .btn-clear:hover { border-color: var(--red); color: var(--red); }
+
+  .loader { display: none; align-items: center; gap: 10px; padding: 16px 0; color: var(--text2); font-size: 13px; }
+  .loader.active { display: flex; }
+  .loader-dots { display: flex; gap: 4px; }
+  .ld { width: 6px; height: 6px; border-radius: 50%; background: var(--rose); animation: bounce 1.2s ease-in-out infinite; }
+  .ld:nth-child(2){animation-delay:0.15s;} .ld:nth-child(3){animation-delay:0.3s;}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:0.4;}30%{transform:translateY(-6px);opacity:1;}}
+
+  .error { background: rgba(255,77,106,0.08); border: 1px solid rgba(255,77,106,0.2); border-radius: var(--radius); padding: 14px 16px; color: var(--red); font-size: 13px; display: none; margin-top: 12px; }
+
+  #result { display: none; animation: fadeUp 0.4s ease both; margin-top: 8px; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);} }
+
+  .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .result-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rose); }
+  .btn-copy { background: transparent; border: 1px solid var(--border2); border-radius: 8px; padding: 7px 14px; color: var(--text2); font-size: 12px; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+  .btn-copy:hover { border-color: var(--rose); color: var(--rose); }
+
+  /* HERO */
+  .hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
+  .hero-top { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; }
+  .avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--rose); flex-shrink: 0; }
+  .hero-info { flex: 1; }
+  .hero-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
+  .hero-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 500; }
+
+  /* SCORE GRID */
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px,1fr)); gap: 10px; margin-bottom: 16px; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+  .score-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .score-val { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+
+  /* CRITERIOS */
+  .criterios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .criterio-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
+  .criterio-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .criterio-label { font-size: 12px; font-weight: 500; color: var(--text2); }
+  .criterio-nota { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+  .criterio-obs { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+  /* OBJECOES */
+  .objecao-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 8px; }
+  .objecao-title { font-size: 13px; font-weight: 500; color: var(--amber); margin-bottom: 8px; }
+  .objecao-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; line-height: 1.6; }
+  .objecao-key { color: var(--text3); flex-shrink: 0; width: 90px; }
+  .objecao-val { color: var(--text2); }
+  .objecao-deveria { color: var(--accent); }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 10px; }
+  .card-title { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .cdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .list-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 14px; color: var(--text); line-height: 1.6; }
+  .list-item:last-child { margin-bottom: 0; }
+  .list-bullet { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; }
+
+  .coach-box { background: var(--surface2); border-left: 3px solid var(--rose); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; padding: 18px 20px; margin-bottom: 10px; }
+  .coach-label { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); margin-bottom: 10px; }
+  .coach-text { font-size: 14px; color: var(--text2); line-height: 1.8; font-style: italic; font-weight: 300; }
+
+  .roleplay-box { background: rgba(164,94,244,0.06); border: 1px solid rgba(167,139,250,0.2); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 10px; }
+  .roleplay-label { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 10px; }
+  .roleplay-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text3); }
+
+  @media (max-width: 600px) { .criterios-grid { grid-template-columns: 1fr; } .hero-top { flex-direction: column; text-align: center; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="header-top"><div class="logo-dot"></div><span class="logo-label">Trafega · Agente IA</span></div>
+    <h1>Analisador de <span>Reuniao de Vendas</span></h1>
+    <p class="subtitle">Cole a transcricao da reuniao e receba uma analise completa da performance do closer.</p>
+  </header>
+
+  <div class="nav">
+    <a href="/index.html">↗ Resumo SDR</a>
+    <a href="/analisar.html">⬡ Analista de Ligacao</a>
+    <a href="/preparar.html">◈ Preparador de Reuniao</a>
+    <a href="#" class="active">◉ Analisador de Reuniao</a>
+  </div>
+
+  <div class="section-label">Transcricao da reuniao de vendas</div>
+  <textarea id="scriptInput" placeholder="Cole aqui a transcricao da reuniao de vendas do closer..."></textarea>
+  <div class="actions">
+    <button class="btn-main" id="btnAnalyze" onclick="analisar()">◉ Analisar reuniao de vendas</button>
+    <button class="btn-clear" onclick="limpar()">Limpar</button>
+  </div>
+  <div class="loader" id="loader">
+    <div class="loader-dots"><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>
+    <span>Analisando reuniao...</span>
+  </div>
+  <div class="error" id="errorBox"></div>
+
+  <div id="result">
+    <div class="result-header">
+      <div class="result-title">◉ Analise de Performance</div>
+      <button class="btn-copy" onclick="copiar()">↗ Copiar relatorio</button>
+    </div>
+    <div id="resultContent"></div>
+  </div>
+
+  <footer>Analisador de Reuniao · Trafega · Powered by Claude</footer>
+</div>
+
+<script>
+function limpar() {
+  document.getElementById('scriptInput').value = '';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+}
+function showError(msg) {
+  var el = document.getElementById('errorBox');
+  el.textContent = msg; el.style.display = 'block';
+}
+function cor(n) {
+  if (n >= 8) return '#00E5A0';
+  if (n >= 6) return '#FFB547';
+  return '#FF4D6A';
+}
+function classifStyle(c) {
+  if (c === 'Excelente') return 'background:rgba(0,229,160,0.12);color:#00E5A0;border:1px solid rgba(0,229,160,0.25)';
+  if (c === 'Bom') return 'background:rgba(77,158,255,0.12);color:#4D9EFF;border:1px solid rgba(77,158,255,0.25)';
+  if (c === 'Regular') return 'background:rgba(255,181,71,0.12);color:#FFB547;border:1px solid rgba(255,181,71,0.25)';
+  return 'background:rgba(255,77,106,0.12);color:#FF4D6A;border:1px solid rgba(255,77,106,0.25)';
+}
+function resultStyle(r) {
+  if (r === 'Fechou') return 'background:rgba(0,229,160,0.12);color:#00E5A0;border:1px solid rgba(0,229,160,0.25)';
+  if (r === 'Em negociacao') return 'background:rgba(255,181,71,0.12);color:#FFB547;border:1px solid rgba(255,181,71,0.25)';
+  if (r === 'Reagendou') return 'background:rgba(77,158,255,0.12);color:#4D9EFF;border:1px solid rgba(77,158,255,0.25)';
+  return 'background:rgba(255,77,106,0.12);color:#FF4D6A;border:1px solid rgba(255,77,106,0.25)';
+}
+
+var criterioLabels = {
+  abertura_contexto: 'Abertura / Contexto',
+  diagnostico: 'Diagnostico',
+  escuta_ativa: 'Escuta ativa',
+  apresentacao_solucao: 'Apresentacao da solucao',
+  uso_de_cases: 'Uso de cases',
+  apresentacao_preco: 'Apresentacao de preco',
+  manejo_objecoes: 'Manejo de objecoes',
+  tentativas_fechamento: 'Tentativas de fechamento',
+  proximo_passo: 'Proximo passo',
+  postura_consultiva: 'Postura consultiva'
+};
+
+function initials(name) {
+  if (!name || name === 'Nao identificado') return '?';
+  return name.split(' ').slice(0,2).map(function(n){return n[0];}).join('').toUpperCase();
+}
+
+async function analisar() {
+  var script = document.getElementById('scriptInput').value.trim();
+  if (!script) { showError('Cole a transcricao da reuniao antes de analisar.'); return; }
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('loader').classList.add('active');
+  document.getElementById('btnAnalyze').disabled = true;
+
+  try {
+    var res = await fetch('/api/reuniao', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ script: script })
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro ' + res.status);
+    renderResult(data);
+  } catch(e) {
+    showError('Erro: ' + e.message);
+  }
+  document.getElementById('loader').classList.remove('active');
+  document.getElementById('btnAnalyze').disabled = false;
+}
+
+function renderResult(d) {
+  var nc = d.notas_por_criterio || {};
+  var notaCor = cor(d.nota_geral || 0);
+  var html = '';
+
+  // HERO
+  html += '<div class="hero">';
+  html += '<div class="hero-top">';
+  html += '<div class="avatar">' + initials(d.nome_closer) + '</div>';
+  html += '<div class="hero-info">';
+  html += '<div class="hero-name">' + (d.nome_closer || 'Closer') + '</div>';
+  html += '<div class="hero-sub">Lead: ' + (d.nome_lead||'—') + ' · ' + (d.empresa_lead||'—') + '</div>';
+  html += '</div></div>';
+  html += '<div class="badges">';
+  html += '<span class="badge" style="' + classifStyle(d.classificacao) + '">' + (d.classificacao||'—') + '</span>';
+  html += '<span class="badge" style="' + resultStyle(d.resultado) + '">' + (d.resultado||'—') + '</span>';
+  if (d.produto_apresentado && d.produto_apresentado !== 'Nao identificado') {
+    var pc = d.produto_apresentado === 'AutoScale' ? 'background:rgba(0,229,160,0.1);color:#00E5A0;border:1px solid rgba(0,229,160,0.2)' : 'background:rgba(77,158,255,0.1);color:#4D9EFF;border:1px solid rgba(77,158,255,0.2)';
+    html += '<span class="badge" style="' + pc + '">' + d.produto_apresentado + '</span>';
+  }
+  html += '</div></div>';
+
+  // NOTA GERAL
+  html += '<div class="score-grid">';
+  html += '<div class="score-card"><div class="score-label">Nota geral</div><div class="score-val" style="color:' + notaCor + '">' + (d.nota_geral||0) + '<span style="font-size:13px;color:var(--text3)">/10</span></div></div>';
+  Object.keys(criterioLabels).slice(0,4).forEach(function(k) {
+    var c = nc[k] || {};
+    html += '<div class="score-card"><div class="score-label">' + criterioLabels[k] + '</div><div class="score-val" style="color:' + cor(c.nota||0) + ';font-size:18px">' + (c.nota||0) + '<span style="font-size:12px;color:var(--text3)">/10</span></div></div>';
+  });
+  html += '</div>';
+
+  // CRITERIOS GRID
+  html += '<div class="criterios-grid">';
+  Object.keys(criterioLabels).forEach(function(k) {
+    var c = nc[k] || {};
+    var nc2 = cor(c.nota||0);
+    html += '<div class="criterio-card">';
+    html += '<div class="criterio-header"><span class="criterio-label">' + criterioLabels[k] + '</span><span class="criterio-nota" style="color:' + nc2 + '">' + (c.nota||0) + '<span style="font-size:11px;color:var(--text3)">/10</span></span></div>';
+    html += '<div class="criterio-obs">' + (c.observacao||'') + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // PONTOS POSITIVOS
+  html += '<div class="card"><div class="card-title"><span class="cdot" style="background:#00E5A0"></span>Pontos positivos</div>';
+  (d.pontos_positivos||[]).forEach(function(t){ html += '<div class="list-item"><span class="list-bullet" style="background:#00E5A0"></span><span>'+t+'</span></div>'; });
+  html += '</div>';
+
+  // FALHAS
+  html += '<div class="card"><div class="card-title"><span class="cdot" style="background:#FF4D6A"></span>Falhas identificadas</div>';
+  (d.falhas||[]).forEach(function(t){ html += '<div class="list-item"><span class="list-bullet" style="background:#FF4D6A"></span><span>'+t+'</span></div>'; });
+  html += '</div>';
+
+  // OBJECOES
+  if (d.objecoes_identificadas && d.objecoes_identificadas.length) {
+    html += '<div class="card"><div class="card-title"><span class="cdot" style="background:var(--amber)"></span>Objecoes identificadas</div>';
+    d.objecoes_identificadas.forEach(function(o) {
+      html += '<div class="objecao-card">';
+      html += '<div class="objecao-title">❝ ' + o.objecao + '</div>';
+      html += '<div class="objecao-row"><span class="objecao-key">Como tratou:</span><span class="objecao-val">' + o.como_foi_tratada + '</span></div>';
+      html += '<div class="objecao-row"><span class="objecao-key">Deveria:</span><span class="objecao-deveria">' + o.deveria_ter_sido + '</span></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  // O QUE CORRIGIR
+  html += '<div class="card"><div class="card-title"><span class="cdot" style="background:var(--amber)"></span>O que corrigir</div>';
+  (d.o_que_corrigir||[]).forEach(function(t){ html += '<div class="list-item"><span class="list-bullet" style="background:var(--amber)"></span><span>'+t+'</span></div>'; });
+  html += '</div>';
+
+  // COMO MELHORAR
+  html += '<div class="card"><div class="card-title"><span class="cdot" style="background:var(--blue)"></span>Como melhorar</div>';
+  (d.como_melhorar||[]).forEach(function(t){ html += '<div class="list-item"><span class="list-bullet" style="background:var(--blue)"></span><span>'+t+'</span></div>'; });
+  html += '</div>';
+
+  // ROLEPLAY
+  html += '<div class="roleplay-box"><div class="roleplay-label">🎭 Sugestao de roleplay</div><div class="roleplay-text">' + (d.sugestao_roleplay||'') + '</div></div>';
+
+  // COACH
+  html += '<div class="coach-box"><div class="coach-label">💬 Feedback do gestor</div><div class="coach-text">' + (d.resumo_coach||'') + '</div></div>';
+
+  window._lastReport = buildText(d);
+  document.getElementById('resultContent').innerHTML = html;
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildText(d) {
+  var nc = d.notas_por_criterio || {};
+  var lines = [
+    'ANALISE DE REUNIAO DE VENDAS — TRAFEGA',
+    'Closer: '+(d.nome_closer||'—')+' | Lead: '+(d.nome_lead||'—')+' | Empresa: '+(d.empresa_lead||'—'),
+    'Produto: '+(d.produto_apresentado||'—')+' | Resultado: '+(d.resultado||'—'),
+    'Nota geral: '+(d.nota_geral||0)+'/10 | '+(d.classificacao||''),
+    '',
+    'NOTAS POR CRITERIO:'
+  ];
+  Object.keys(criterioLabels).forEach(function(k){
+    var c = nc[k]||{};
+    lines.push(criterioLabels[k]+': '+(c.nota||0)+'/10 — '+(c.observacao||''));
+  });
+  lines.push('','PONTOS POSITIVOS:\n'+(d.pontos_positivos||[]).map(function(x){return '• '+x;}).join('\n'));
+  lines.push('','FALHAS:\n'+(d.falhas||[]).map(function(x){return '• '+x;}).join('\n'));
+  if (d.objecoes_identificadas&&d.objecoes_identificadas.length) {
+    lines.push('','OBJECOES:');
+    d.objecoes_identificadas.forEach(function(o){
+      lines.push('❝ '+o.objecao+'\nComo tratou: '+o.como_foi_tratada+'\nDeveria: '+o.deveria_ter_sido);
+    });
+  }
+  lines.push('','O QUE CORRIGIR:\n'+(d.o_que_corrigir||[]).map(function(x){return '• '+x;}).join('\n'));
+  lines.push('','COMO MELHORAR:\n'+(d.como_melhorar||[]).map(function(x){return '• '+x;}).join('\n'));
+  lines.push('','ROLEPLAY:\n'+(d.sugestao_roleplay||''));
+  lines.push('','FEEDBACK DO GESTOR:\n'+(d.resumo_coach||''));
+  return lines.join('\n');
+}
+
+function copiar() {
+  if (!window._lastReport) return;
+  var btn = document.querySelector('.btn-copy');
+  function fb(txt) {
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position='fixed'; ta.style.top='-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{document.execCommand('copy');btn.textContent='✓ Copiado!';}catch(e){btn.textContent='Erro';}
+    document.body.removeChild(ta);
+    setTimeout(function(){btn.textContent='↗ Copiar relatorio';},2000);
+  }
+  if (navigator.clipboard&&window.isSecureContext) {
+    navigator.clipboard.writeText(window._lastReport)
+      .then(function(){btn.textContent='✓ Copiado!';setTimeout(function(){btn.textContent='↗ Copiar relatorio';},2000);})
+      .catch(function(){fb(window._lastReport);});
+  } else { fb(window._lastReport); }
+}
+</script>
+</body>
+</html>
