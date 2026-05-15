@@ -94,7 +94,12 @@ Estrutura JSON exigida:
     }
 
     const text = data.content.filter((b) => b.type === "text").map((b) => b.text).join("");
-    const clean = text.replace(/```json|```/g, "").trim();
+    let clean = text.replace(/```json|```/g, "").trim();
+    const firstBrace = clean.indexOf("{");
+    const lastBrace = clean.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      clean = clean.slice(firstBrace, lastBrace + 1);
+    }
     const parsed = JSON.parse(clean);
     return res.status(200).json(parsed);
   } catch (err) {
