@@ -158,7 +158,7 @@ Estrutura JSON exigida:
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 4000,
+        max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: "user", content: "Briefing do SDR:\n\n" + briefing }],
       }),
@@ -170,7 +170,13 @@ Estrutura JSON exigida:
     }
 
     const text = data.content.filter((b) => b.type === "text").map((b) => b.text).join("");
-    const clean = text.replace(/```json|```/g, "").trim();
+    let clean = text.replace(/```json|```/g, "").trim();
+    // Find first { and last } to extract valid JSON
+    const firstBrace = clean.indexOf("{");
+    const lastBrace = clean.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      clean = clean.slice(firstBrace, lastBrace + 1);
+    }
     const parsed = JSON.parse(clean);
     return res.status(200).json(parsed);
   } catch (err) {
