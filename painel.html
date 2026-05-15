@@ -385,7 +385,7 @@ function CN(d){S.cm+=d;if(S.cm>11){S.cm=0;S.cy++;}if(S.cm<0){S.cm=11;S.cy--;}RC(
 function DD(ds){
   var lans=S.lan.filter(function(l){return l.data===ds;});
   var det=document.getElementById("cal-det");
-  if(!lans.length){det.innerHTML="<div class=\"card\" style=\"font-size:13px;color:var(--text2)\">Sem lancamentos em "+ds+".</div>";return;}
+  if(!lans.length){det.innerHTML="<div class=\"card\" style=\"font-size:13px;color:var(--text2)\">Sem lancamentos em "+toBR(ds)+".</div>";return;}
   var h="";
   lans.forEach(function(l){
     var m=S.mem.find(function(x){return x.id===l.membro_id;});if(!m)return;
