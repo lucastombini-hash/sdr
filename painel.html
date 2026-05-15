@@ -317,6 +317,7 @@ async function SL(){
   btn.disabled=false;btn.textContent="Salvar lancamento do dia";
 }
 
+function toBR(s){var p=s.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
 function WR(){var n=new Date(),d=n.getDay(),mo=new Date(n);mo.setDate(n.getDate()-(d===0?6:d-1));var su=new Date(mo);su.setDate(mo.getDate()+6);return[mo.toISOString().slice(0,10),su.toISOString().slice(0,10)];}
 function MR(){var n=new Date(),y=n.getFullYear(),m=n.getMonth();return[new Date(y,m,1).toISOString().slice(0,10),new Date(y,m+1,0).toISOString().slice(0,10)];}
 function GL(mid,d1,d2){return S.lan.filter(function(l){return(!mid||l.membro_id===mid)&&l.data>=d1&&l.data<=d2;});}
@@ -357,7 +358,7 @@ function MB(m,lans,per){
 
 function RP(tipo){
   var r=tipo==="semanal"?WR():MR();
-  var lbl=tipo==="semanal"?"Semana: "+r[0]+" a "+r[1]:MN[new Date().getMonth()]+" "+new Date().getFullYear();
+  var lbl=tipo==="semanal"?"Semana: "+toBR(r[0])+" a "+toBR(r[1]):MN[new Date().getMonth()]+" "+new Date().getFullYear();
   var h="<div style=\"font-size:13px;color:var(--text2);margin-bottom:14px\">"+lbl+"</div>";
   if(!S.lan.length)h+="<div class=\"card\" style=\"color:var(--text2);font-size:13px\">Nenhum lancamento ainda.</div>";
   else S.mem.forEach(function(m){h+=MB(m,GL(m.id,r[0],r[1]),tipo);});
@@ -366,9 +367,9 @@ function RP(tipo){
 
 function RC(){
   document.getElementById("cal-t").textContent=MN[S.cm]+" "+S.cy;
-  var ds=["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
+  var ds=["Seg","Ter","Qua","Qui","Sex","Sab","Dom"];
   document.getElementById("cal-h").innerHTML=ds.map(function(d){return "<div class=\"cal-h\">"+d+"</div>";}).join("");
-  var fd=new Date(S.cy,S.cm,1).getDay(),dim=new Date(S.cy,S.cm+1,0).getDate();
+  var fd=(new Date(S.cy,S.cm,1).getDay()+6)%7,dim=new Date(S.cy,S.cm+1,0).getDate();
   var td=new Date().toISOString().slice(0,10),dd=S.lan.map(function(l){return l.data;});
   var h="";
   for(var i=0;i<fd;i++)h+="<div class=\"cal-d empty\"></div>";
@@ -391,7 +392,7 @@ function DD(ds){
     h+="<div class=\"mb\"><div style=\"display:flex;align-items:center;gap:10px;margin-bottom:12px\">";
     h+="<div class=\"avatar\" style=\"width:32px;height:32px;font-size:11px\">"+ini(m.nome)+"</div>";
     h+="<div><div style=\"font-size:13px;font-weight:500;color:var(--text)\">"+m.nome+" <span class=\"badge "+bc(m.cargo)+"\">"+m.cargo.toUpperCase()+"</span></div>";
-    h+="<div style=\"font-size:12px;color:var(--text3)\">"+ds+"</div></div></div>";
+    h+="<div style=\"font-size:12px;color:var(--text3)\">"+toBR(ds)+"</div></div></div>";
     h+="<div class=\"mgrid\">";
     var fs=[{k:"ligacoes",lb:"Ligacoes"},{k:"ligacoes_efetivas",lb:"Efetivas"},{k:"agendamentos",lb:"Agendamentos"},{k:"reunioes",lb:"Reunioes"}];
     if(l.vendas||l.receita){fs.push({k:"vendas",lb:"Vendas"});fs.push({k:"receita",lb:"Receita R$"});}
