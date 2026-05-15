@@ -73,6 +73,55 @@ function bb(b){return b?'background:var(--green-dim);color:var(--green)':'backgr
 function etapas(arr,ic,co){if(!arr||!arr.length)return'<span style="font-size:13px;color:var(--text3)">Nenhuma</span>';return arr.map(function(e){return'<div class="etapa"><span style="color:'+co+'">'+ic+'</span><span>'+e+'</span></div>';}).join('');}
 async function analisar(){var s=document.getElementById('si').value.trim();if(!s){se('Cole a transcricao antes de analisar.');return;}
 document.getElementById('err').style.display='none';document.getElementById('result').style.display='none';document.getElementById('loader').classList.add('on');document.getElementById('bg').disabled=true;try{var r=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({script:s})});var d=await r.json();if(!r.ok)throw new Error(d.error||'Erro '+r.status);render(d);}catch(e){se('Erro: '+e.message);}document.getElementById('loader').classList.remove('on');document.getElementById('bg').disabled=false;}
+function buildText(d){
+  var sep="\n"+"─".repeat(40)+"\n";
+  var nc=d.notas_por_criterio||{};
+  var lines=[];
+  lines.push("ANÁLISE DE LIGAÇÃO SDR — TRAFEGA");
+  lines.push("━".repeat(40));
+  lines.push("SDR: "+(d.nome_sdr||"—")+" | Lead: "+(d.nome_lead||"—"));
+  lines.push("Nota geral: "+(d.nota_geral||0)+"/10 | "+(d.classificacao||""));
+  lines.push(sep);
+  lines.push("BANT");
+  var b=d.bant||{};
+  ["budget","authority","need","timeline"].forEach(function(k){
+    var bc2=b[k]||{};
+    lines.push("  "+k.toUpperCase()+": "+(bc2.nota||0)+"/10 — "+(bc2.identificado?"Identificado":"Não identificado"));
+    if(bc2.observacao)lines.push("    "+bc2.observacao);
+  });
+  var as=d.aderencia_script||{};
+  lines.push(sep);
+  lines.push("ADERÊNCIA AO SCRIPT: "+(as.nota||0)+"/10");
+  if(as.etapas_seguidas&&as.etapas_seguidas.length){lines.push("  Seguidas:");(as.etapas_seguidas||[]).forEach(function(x){lines.push("    ✓ "+x);});}
+  if(as.etapas_puladas&&as.etapas_puladas.length){lines.push("  Puladas:");(as.etapas_puladas||[]).forEach(function(x){lines.push("    ✗ "+x);});}
+  lines.push(sep);
+  lines.push("PONTOS POSITIVOS");
+  (d.pontos_positivos||[]).forEach(function(x){lines.push("  • "+x);});
+  lines.push("");
+  lines.push("FALHAS IDENTIFICADAS");
+  (d.falhas||[]).forEach(function(x){lines.push("  • "+x);});
+  lines.push("");
+  lines.push("O QUE CORRIGIR");
+  (d.o_que_corrigir||[]).forEach(function(x){lines.push("  • "+x);});
+  lines.push("");
+  lines.push("COMO MELHORAR");
+  (d.como_melhorar||[]).forEach(function(x){lines.push("  • "+x);});
+  if(d.objecoes_identificadas&&d.objecoes_identificadas.length){
+    lines.push(sep);
+    lines.push("OBJEÇÕES IDENTIFICADAS");
+    d.objecoes_identificadas.forEach(function(o){
+      lines.push("  ❝ "+o.objecao);
+      lines.push("    Como tratou: "+o.como_foi_tratada);
+    });
+  }
+  lines.push(sep);
+  lines.push("SUGESTÃO DE ROLEPLAY");
+  lines.push(d.sugestao_roleplay||"");
+  lines.push(sep);
+  lines.push("FEEDBACK DO GESTOR");
+  lines.push(d.resumo_coach||"");
+  return lines.join("\n");
+}
 function render(d){
   var b=d.bant||{};var as=d.aderencia_script||{};var nc=cor(d.nota_geral||0);
   var ini=(d.nome_sdr||'?').split(' ').slice(0,2).map(function(n){return n[0];}).join('').toUpperCase();
@@ -92,7 +141,7 @@ function render(d){
   if(d.objecoes_identificadas&&d.objecoes_identificadas.length){h+='<div class="card"><div class="ct" style="color:var(--amber)">Objecoes mapeadas</div>';d.objecoes_identificadas.forEach(function(o){h+='<div style="background:rgba(245,158,11,.04);border-left:2px solid var(--amber);border-radius:0 var(--r) var(--r) 0;padding:10px 13px;margin-bottom:7px"><div style="color:var(--amber);font-size:13px;font-weight:500;margin-bottom:4px">❝ '+o.objecao+'</div><div style="font-size:13px;color:var(--text2)">→ '+o.como_foi_tratada+'</div></div>';});h+='</div>';}
   h+='<div class="rplay"><div style="font-family:var(--fd);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:7px">🎭 Sugestao de roleplay</div><div style="font-size:14px;color:var(--text);line-height:1.7">'+(d.sugestao_roleplay||'')+'</div></div>';
   h+='<div class="coach"><div style="font-family:var(--fd);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:7px">💬 Feedback do gestor</div><div style="font-size:14px;color:var(--text2);line-height:1.8;font-style:italic;font-weight:300">'+(d.resumo_coach||'')+'</div></div>';
-  window._r=JSON.stringify(d,null,2);document.getElementById('rc').innerHTML=h;document.getElementById('result').style.display='block';document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+  window._r=buildText(d);document.getElementById('rc').innerHTML=h;document.getElementById('result').style.display='block';document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function copiar(){if(!window._r)return;var b=document.querySelector('.btn-copy');function fb(t){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:-9999px';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');b.textContent='✓ Copiado!';}catch(e){}document.body.removeChild(ta);setTimeout(function(){b.textContent='↗ Copiar relatorio';},2000);}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(window._r).then(function(){b.textContent='✓ Copiado!';setTimeout(function(){b.textContent='↗ Copiar relatorio';},2000);}).catch(function(){fb(window._r);})}else{fb(window._r)}}
 </script></body></html>
