@@ -70,6 +70,63 @@
 function se(m){var e=document.getElementById('err');e.textContent=m;e.style.display='block';}function li(a,c){return(a||[]).map(function(t){return'<div class="li"><span class="dot" style="background:'+c+'"></span><span>'+t+'</span></div>';}).join('');}
 async function preparar(){var s=document.getElementById('si').value.trim();if(!s){se('Cole o briefing antes de continuar.');return;}
 document.getElementById('err').style.display='none';document.getElementById('result').style.display='none';document.getElementById('loader').classList.add('on');document.getElementById('bg').disabled=true;try{var r=await fetch('/api/preparar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({briefing:s})});var d=await r.json();if(!r.ok)throw new Error(d.error||'Erro '+r.status);render(d);}catch(e){se('Erro: '+e.message);}document.getElementById('loader').classList.remove('on');document.getElementById('bg').disabled=false;}
+function buildText(d){
+  var sep="\n"+"─".repeat(40)+"\n";
+  var lines=[];
+  lines.push("PREPARAÇÃO DE REUNIÃO — TRAFEGA");
+  lines.push("━".repeat(40));
+  lines.push("Lead: "+(d.nome_lead||"—")+" | Empresa: "+(d.empresa||"—"));
+  lines.push("Produto: "+(d.produto_recomendado||"—")+" | Plano: "+(d.plano_recomendado||"—"));
+  lines.push("");
+  lines.push("Justificativa: "+(d.justificativa_produto||""));
+  lines.push("Plano: "+(d.justificativa_plano||""));
+  lines.push(sep);
+  lines.push("RESUMO EXECUTIVO");
+  lines.push(d.resumo_executivo||"");
+  lines.push(sep);
+  lines.push("ABERTURA SUGERIDA");
+  lines.push('"'+(d.abertura_sugerida||"")+'"');
+  lines.push(sep);
+  lines.push("PERGUNTAS DE DIAGNÓSTICO");
+  (d.perguntas_diagnostico||[]).forEach(function(p,i){
+    lines.push("  "+(i+1)+". "+p.pergunta);
+    lines.push("     Objetivo: "+p.objetivo);
+  });
+  lines.push(sep);
+  lines.push("COMO APRESENTAR A SOLUÇÃO");
+  lines.push(d.como_apresentar_solucao||"");
+  if(d.cases_para_usar&&d.cases_para_usar.length){
+    lines.push(sep);
+    lines.push("CASES PARA USAR");
+    (d.cases_para_usar||[]).forEach(function(x){lines.push("  • "+x);});
+  }
+  if(d.objecoes_previstas&&d.objecoes_previstas.length){
+    lines.push(sep);
+    lines.push("OBJEÇÕES PREVISTAS + RESPOSTAS");
+    d.objecoes_previstas.forEach(function(o){
+      lines.push("  ❝ "+o.objecao);
+      lines.push("    → "+o.resposta);
+      lines.push("");
+    });
+  }
+  lines.push(sep);
+  lines.push("COMO APRESENTAR O PREÇO");
+  lines.push(d.como_apresentar_preco||"");
+  lines.push(sep);
+  lines.push("SINAL DE FECHAMENTO");
+  lines.push(d.sinal_de_fechamento||"");
+  if(d.checklist_pre_reuniao&&d.checklist_pre_reuniao.length){
+    lines.push(sep);
+    lines.push("CHECKLIST PRÉ-REUNIÃO");
+    (d.checklist_pre_reuniao||[]).forEach(function(x){lines.push("  ☐ "+x);});
+  }
+  if(d.alertas&&d.alertas.length){
+    lines.push(sep);
+    lines.push("ALERTAS");
+    (d.alertas||[]).forEach(function(x){lines.push("  ⚠ "+x);});
+  }
+  return lines.join("\n");
+}
 function render(d){
   var ia=d.produto_recomendado==='AutoScale',pc=ia?'var(--green)':'var(--blue)',pb=ia?'var(--green-dim)':'rgba(59,130,246,.08)',pbo=ia?'rgba(34,197,94,.2)':'rgba(59,130,246,.2)';
   var h='<div class="ph" style="background:'+pb+';border:1px solid '+pbo+'">';
@@ -87,7 +144,7 @@ function render(d){
   h+='<div class="card"><div class="ct" style="color:var(--green)">Sinal de fechamento</div><div class="sn">'+(d.sinal_de_fechamento||'')+'</div></div>';
   if(d.checklist_pre_reuniao&&d.checklist_pre_reuniao.length){h+='<div class="card"><div class="ct" style="color:#93C5FD">Checklist pre-reuniao</div>';d.checklist_pre_reuniao.forEach(function(c){h+='<div class="chk"><div class="cb"></div><span>'+c+'</span></div>';});h+='</div>';}
   if(d.alertas&&d.alertas.length){h+='<div class="card"><div class="ct" style="color:var(--amber)">Alertas</div>';d.alertas.forEach(function(a){h+='<div style="background:rgba(245,158,11,.06);border-left:2px solid var(--amber);border-radius:0 var(--r) var(--r) 0;padding:8px 12px;font-size:13px;color:var(--text2);margin-bottom:5px">⚠ '+a+'</div>';});h+='</div>';}
-  window._r=JSON.stringify(d,null,2);document.getElementById('rc').innerHTML=h;document.getElementById('result').style.display='block';document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+  window._r=buildText(d);document.getElementById('rc').innerHTML=h;document.getElementById('result').style.display='block';document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function copiar(){if(!window._r)return;var b=document.querySelector('.btn-copy');function fb(t){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:-9999px';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');b.textContent='✓ Copiado!';}catch(e){}document.body.removeChild(ta);setTimeout(function(){b.textContent='↗ Copiar roteiro';},2000);}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(window._r).then(function(){b.textContent='✓ Copiado!';setTimeout(function(){b.textContent='↗ Copiar roteiro';},2000);}).catch(function(){fb(window._r);})}else{fb(window._r)}}
 </script></body></html>
