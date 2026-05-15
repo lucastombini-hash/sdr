@@ -18,21 +18,40 @@
   --r:10px;--rl:14px;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;line-height:1.6;min-height:100vh}
-.app{max-width:860px;margin:0 auto;padding:0 20px 80px}
+.app{max-width:900px;margin:0 auto;padding:0 20px 80px}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:36px 32px;width:100%;max-width:400px}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.login-logo img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.login-logo-n{font-family:var(--fd);font-size:22px;font-weight:800;color:var(--text)}
+.login-logo-s{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+.login-title{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--text);margin-bottom:20px}
+.first-note{background:var(--gd);border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--green);margin-bottom:16px;display:none}
+
+/* HEADER */
 header{padding:28px 0 22px;border-bottom:1px solid var(--border);margin-bottom:24px}
-.hdr{display:flex;align-items:center;gap:12px}
+.hdr{display:flex;align-items:center;justify-content:space-between}
+.hdr-left{display:flex;align-items:center;gap:12px}
 .logo{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0}
 .logo-n{font-family:var(--fd);font-size:19px;font-weight:800;color:var(--text);letter-spacing:-0.02em}
-.logo-s{font-size:11px;color:var(--green);letter-spacing:0.08em;text-transform:uppercase}
+.logo-s{font-size:11px;color:var(--green);letter-spacing:.08em;text-transform:uppercase}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all .2s}
+.user-pill:hover{border-color:var(--red);color:var(--red)}
+.user-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+
 nav{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
 nav a{padding:7px 13px;border-radius:20px;font-size:12px;text-decoration:none;border:1px solid var(--border2);color:var(--text2);transition:all .2s}
 nav a:hover{border-color:var(--green);color:var(--green)}
 nav a.on{background:var(--gd);border-color:rgba(34,197,94,.35);color:var(--green)}
+
 .tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:4px;margin-bottom:22px;flex-wrap:wrap}
 .tab{flex:1;min-width:70px;padding:8px 6px;font-size:12px;cursor:pointer;border:none;background:transparent;color:var(--text2);border-radius:var(--r);font-family:var(--fb);text-align:center;transition:all .15s}
 .tab.on{background:var(--gd);color:var(--green);font-weight:500;border:1px solid rgba(34,197,94,.2)}
 .tab:hover:not(.on){color:var(--text);background:var(--surface2)}
 .panel{display:none}.panel.on{display:block}
+
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;margin-bottom:10px}
 .ct{font-family:var(--fd);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .ct::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
@@ -40,6 +59,7 @@ nav a.on{background:var(--gd);border-color:rgba(34,197,94,.35);color:var(--green
 input,select{width:100%;padding:9px 12px;font-size:14px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface2);color:var(--text);font-family:var(--fb);outline:none;transition:border-color .2s}
 input:focus,select:focus{border-color:var(--green)}
 input::placeholder{color:var(--text3)}
+input[type=password]{letter-spacing:.1em}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .btn-g{width:100%;padding:11px;font-size:14px;font-weight:700;cursor:pointer;background:var(--green);color:#0A0C0F;border:none;border-radius:var(--r);font-family:var(--fd);transition:all .2s;letter-spacing:.02em}
 .btn-g:hover{background:var(--green2);transform:translateY(-1px)}
@@ -74,6 +94,17 @@ input::placeholder{color:var(--text3)}
 .fb{font-size:13px;color:var(--green);text-align:center;margin-top:8px;display:none}
 .ss{font-size:11px;color:var(--text3);text-align:right;margin-bottom:8px}
 .ss.ok{color:var(--green)}.ss.err{color:var(--red)}
+
+/* DASHBOARD HEAD */
+.dash-hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;text-align:center}
+.dash-val{font-family:var(--fd);font-size:28px;font-weight:800;color:var(--green)}
+.dash-lbl{font-size:12px;color:var(--text2);margin-top:4px}
+.rank-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.rank-row:last-child{border-bottom:none}
+.rank-num{width:26px;height:26px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2);flex-shrink:0}
+.rank-num.first{background:rgba(234,179,8,.15);color:#EAB308}
+
 footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px}
 footer img{width:18px;height:18px;border-radius:50%;opacity:.4;object-fit:cover}
 footer span{font-size:12px;color:var(--text3)}
@@ -81,13 +112,51 @@ footer span{font-size:12px;color:var(--text3)}
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- LOGIN SCREEN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="/logo.png" alt="Trafega">
+      <div>
+        <div class="login-logo-n">Trafega</div>
+        <div class="login-logo-s">Painel Comercial</div>
+      </div>
+    </div>
+    <div class="login-title" id="login-title">Entrar no painel</div>
+    <div class="first-note" id="first-note">Primeiro acesso — defina sua senha abaixo.</div>
+    <div style="margin-bottom:10px">
+      <label class="lbl">Seu nome</label>
+      <select id="login-nome"></select>
+    </div>
+    <div style="margin-bottom:16px">
+      <label class="lbl" id="pass-label">Senha</label>
+      <input type="password" id="login-senha" placeholder="Digite sua senha" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="login-confirm-wrap" style="margin-bottom:16px;display:none">
+      <label class="lbl">Confirmar senha</label>
+      <input type="password" id="login-confirm" placeholder="Confirme sua senha">
+    </div>
+    <button class="btn-g" onclick="doLogin()">Entrar</button>
+    <div id="login-err" style="font-size:13px;color:var(--red);text-align:center;margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="main-app" style="display:none">
 <header>
   <div class="hdr">
-    <img src="/logo.png" class="logo" alt="Trafega">
-    <div>
-      <div class="logo-n">Trafega</div>
-      <div class="logo-s">Painel Comercial</div>
+    <div class="hdr-left">
+      <img src="/logo.png" class="logo" alt="Trafega">
+      <div>
+        <div class="logo-n">Trafega</div>
+        <div class="logo-s">Painel Comercial</div>
+      </div>
+    </div>
+    <div class="user-pill" onclick="logout()" title="Sair">
+      <div class="user-dot"></div>
+      <span id="user-name-pill">—</span>
+      <span style="font-size:11px;color:var(--text3)">· Sair</span>
     </div>
   </div>
 </header>
@@ -99,15 +168,16 @@ footer span{font-size:12px;color:var(--text3)}
   <a href="/painel.html" class="on">▦ Painel Comercial</a>
 </nav>
 
-<div id="ss" class="ss">Carregando dados...</div>
+<div id="ss" class="ss">Carregando...</div>
 
-<div class="tabs">
+<div class="tabs" id="tabs-bar">
   <button class="tab on" onclick="showTab('lan')">+ Lancamento</button>
   <button class="tab" onclick="showTab('cal')">Calendario</button>
   <button class="tab" onclick="showTab('sem')">Semanal</button>
   <button class="tab" onclick="showTab('men')">Mensal</button>
   <button class="tab" onclick="showTab('met')">Metas</button>
-  <button class="tab" onclick="showTab('eq')">Equipe</button>
+  <button class="tab head-only" onclick="showTab('dash')" style="display:none">Dashboard</button>
+  <button class="tab head-only" onclick="showTab('adm')" style="display:none">Admin</button>
 </div>
 
 <!-- LANCAMENTO -->
@@ -162,10 +232,7 @@ footer span{font-size:12px;color:var(--text3)}
   <div id="cal-det"></div>
 </div>
 
-<!-- SEMANAL -->
 <div id="p-sem" class="panel"><div id="sem-c"></div></div>
-
-<!-- MENSAL -->
 <div id="p-men" class="panel"><div id="men-c"></div></div>
 
 <!-- METAS -->
@@ -191,29 +258,31 @@ footer span{font-size:12px;color:var(--text3)}
     <button class="btn-g" onclick="SM()">Salvar meta</button>
     <div id="m-fb" class="fb">Meta salva!</div>
   </div>
-  <div class="card">
-    <div class="ct">Metas configuradas</div>
-    <div id="met-l"></div>
-  </div>
+  <div class="card"><div class="ct">Metas configuradas</div><div id="met-l"></div></div>
 </div>
 
-<!-- EQUIPE -->
-<div id="p-eq" class="panel">
+<!-- DASHBOARD HEAD -->
+<div id="p-dash" class="panel">
+  <div id="dash-c"></div>
+</div>
+
+<!-- ADMIN HEAD -->
+<div id="p-adm" class="panel">
   <div class="card">
-    <div class="ct">Adicionar Membro</div>
+    <div class="ct">Cadastrar novo membro</div>
     <div class="row2">
-      <div><label class="lbl">Nome</label><input type="text" id="e-nm" placeholder="Nome completo"></div>
-      <div><label class="lbl">Cargo</label><select id="e-cg"><option value="sdr">SDR</option><option value="closer">Closer</option><option value="head">Head</option></select></div>
+      <div><label class="lbl">Nome</label><input type="text" id="a-nm" placeholder="Nome completo"></div>
+      <div><label class="lbl">Cargo</label><select id="a-cg"><option value="sdr">SDR</option><option value="closer">Closer</option><option value="head">Head</option></select></div>
     </div>
-    <button class="btn-g" onclick="AM()">Adicionar ao time</button>
+    <button class="btn-g" onclick="AM()">Cadastrar membro</button>
+    <div id="a-fb" class="fb">Membro cadastrado!</div>
   </div>
   <div class="card">
     <div class="ct">Time atual</div>
-    <div id="eq-l"></div>
+    <div id="adm-list"></div>
   </div>
   <div style="display:flex;gap:10px;margin-top:10px">
     <button class="btn-ghost" style="flex:1" onclick="EX()">Exportar CSV</button>
-    <button onclick="RS()" style="flex:1;padding:9px;font-size:13px;cursor:pointer;background:transparent;border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:var(--r);font-family:var(--fb)">Resetar dados</button>
   </div>
 </div>
 
@@ -229,8 +298,10 @@ var KEY_ = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 
 var S = {mem:[],lan:[],met:[],cy:new Date().getFullYear(),cm:new Date().getMonth()};
 var MN = ["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+var ME = null; // logged in member
 
 function setSS(msg,cls){var e=document.getElementById("ss");e.textContent=msg;e.className="ss"+(cls?" "+cls:"");}
+function toBR(s){var p=s.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
 
 async function req(method,table,body,qs){
   var url=URL_+"/rest/v1/"+table+(qs?"?"+qs:"");
@@ -243,11 +314,87 @@ async function req(method,table,body,qs){
   return r.status===204?null:await r.json();
 }
 
+// ── HASH simples (não criptografia real, só ofuscação)
+function hashSenha(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return h.toString(36);}
+
+// ── LOGIN ────────────────────────────────────────────────────
+async function initLogin(){
+  try{
+    var mems = await req("GET","membros",null,"order=nome.asc");
+    S.mem = mems||[];
+    var sel = document.getElementById("login-nome");
+    sel.innerHTML = S.mem.map(function(m){return "<option value=\""+m.id+"\">"+m.nome+"</option>";}).join("");
+    sel.addEventListener("change", checkFirstAccess);
+    checkFirstAccess();
+  }catch(e){
+    document.getElementById("login-err").textContent="Erro ao carregar membros: "+e.message;
+    document.getElementById("login-err").style.display="block";
+  }
+}
+
+function checkFirstAccess(){
+  var id = document.getElementById("login-nome").value;
+  var m = S.mem.find(function(x){return x.id===id;});
+  var isFirst = !m || m.primeiro_acesso || !m.senha;
+  document.getElementById("first-note").style.display = isFirst?"block":"none";
+  document.getElementById("login-confirm-wrap").style.display = isFirst?"block":"none";
+  document.getElementById("pass-label").textContent = isFirst?"Criar senha":"Senha";
+  document.getElementById("login-title").textContent = isFirst?"Primeiro acesso":"Entrar no painel";
+}
+
+async function doLogin(){
+  var id = document.getElementById("login-nome").value;
+  var senha = document.getElementById("login-senha").value.trim();
+  var errEl = document.getElementById("login-err");
+  errEl.style.display="none";
+  if(!senha){errEl.textContent="Digite sua senha.";errEl.style.display="block";return;}
+  var m = S.mem.find(function(x){return x.id===id;});
+  var isFirst = !m || m.primeiro_acesso || !m.senha;
+  if(isFirst){
+    var confirm = document.getElementById("login-confirm").value.trim();
+    if(senha.length<4){errEl.textContent="Senha deve ter pelo menos 4 caracteres.";errEl.style.display="block";return;}
+    if(senha!==confirm){errEl.textContent="As senhas nao conferem.";errEl.style.display="block";return;}
+    try{
+      await req("PATCH","membros",{senha:hashSenha(senha),primeiro_acesso:false},"id=eq."+id);
+      m.senha=hashSenha(senha);m.primeiro_acesso=false;
+    }catch(e){errEl.textContent="Erro ao salvar senha: "+e.message;errEl.style.display="block";return;}
+  }else{
+    if(hashSenha(senha)!==m.senha){errEl.textContent="Senha incorreta.";errEl.style.display="block";return;}
+  }
+  ME = m;
+  localStorage.setItem("trafega_user",id);
+  enterApp();
+}
+
+function logout(){
+  ME=null;
+  localStorage.removeItem("trafega_user");
+  document.getElementById("main-app").style.display="none";
+  document.getElementById("login-screen").style.display="flex";
+  document.getElementById("login-senha").value="";
+  document.getElementById("login-confirm").value="";
+  document.getElementById("login-err").style.display="none";
+  checkFirstAccess();
+}
+
+function enterApp(){
+  document.getElementById("login-screen").style.display="none";
+  document.getElementById("main-app").style.display="block";
+  document.getElementById("user-name-pill").textContent=ME.nome+" ("+ME.cargo.toUpperCase()+")";
+  // Show head-only tabs
+  var isHead = ME.cargo==="head";
+  document.querySelectorAll(".head-only").forEach(function(el){el.style.display=isHead?"flex":"none";});
+  loadAll();
+}
+
+// ── DATA ────────────────────────────────────────────────────
 async function loadAll(){
   setSS("Carregando...");
   try{
-    var m=await req("GET","membros",null,"order=created_at.asc");
-    var l=await req("GET","lancamentos",null,"order=data.desc");
+    var isHead = ME.cargo==="head";
+    var lq = isHead?"order=data.desc":"membro_id=eq."+ME.id+"&order=data.desc";
+    var m=await req("GET","membros",null,"order=nome.asc");
+    var l=await req("GET","lancamentos",null,lq);
     var t=await req("GET","metas",null,"order=created_at.asc");
     S.mem=m||[];S.lan=l||[];S.met=t||[];
     setSS("Sincronizado","ok");
@@ -264,36 +411,52 @@ function bc(c){return c==="sdr"?"b-sdr":c==="closer"?"b-closer":"b-head";}
 function cor(n){return n>=8?"var(--green)":n>=6?"var(--amber)":"var(--red)";}
 
 function showTab(t){
-  var ids=["lan","cal","sem","men","met","eq"];
+  var ids=["lan","cal","sem","men","met","dash","adm"];
   document.querySelectorAll(".tab").forEach(function(el,i){el.classList.toggle("on",ids[i]===t);});
-  ids.forEach(function(n){document.getElementById("p-"+n).classList.toggle("on",n===t);});
+  ids.forEach(function(n){var el=document.getElementById("p-"+n);if(el)el.classList.toggle("on",n===t);});
   if(t==="cal") RC();
   if(t==="sem") RP("semanal");
   if(t==="men") RP("mensal");
   if(t==="met"){PS();RM();}
-  if(t==="eq") RE();
+  if(t==="dash") renderDash();
+  if(t==="adm") renderAdm();
 }
 
 function PS(){
-  ["l-mem","m-mem"].forEach(function(id){
-    var el=document.getElementById(id);if(!el)return;
-    el.innerHTML=S.mem.map(function(m){return "<option value=\""+m.id+"\">"+m.nome+" ("+m.cargo.toUpperCase()+")</option>";}).join("");
-  });
+  // Lancamento select: head sees all, others see only themselves
+  var el=document.getElementById("l-mem");
+  if(el){
+    var lista = ME.cargo==="head" ? S.mem : S.mem.filter(function(m){return m.id===ME.id;});
+    el.innerHTML=lista.map(function(m){return "<option value=\""+m.id+"\">"+m.nome+"</option>";}).join("");
+    // Pre-select own member
+    if(ME.cargo!=="head") el.value=ME.id;
+    el.disabled = ME.cargo!=="head";
+  }
+  // Metas select: head sees all
+  var em=document.getElementById("m-mem");
+  if(em){
+    var listam = ME.cargo==="head" ? S.mem : S.mem.filter(function(m){return m.id===ME.id;});
+    em.innerHTML=listam.map(function(m){return "<option value=\""+m.id+"\">"+m.nome+"</option>";}).join("");
+    if(ME.cargo!=="head") em.value=ME.id;
+  }
   UF();UMF();
 }
+
 function UF(){
   var el=document.getElementById("l-mem");if(!el)return;
-  var m=S.mem.find(function(x){return x.id===el.value;});
+  var mid = el.value || ME.id;
+  var m=S.mem.find(function(x){return x.id===mid;});
   document.getElementById("cv-card").style.display=(m&&m.cargo==="closer")?"block":"none";
 }
 function UMF(){
   var el=document.getElementById("m-mem");if(!el)return;
-  var m=S.mem.find(function(x){return x.id===el.value;});
+  var mid = el.value || ME.id;
+  var m=S.mem.find(function(x){return x.id===mid;});
   document.getElementById("m-vr").style.display=(m&&m.cargo==="closer")?"grid":"none";
 }
 
 async function SL(){
-  var mid=document.getElementById("l-mem").value;
+  var mid=document.getElementById("l-mem").value||ME.id;
   var dat=document.getElementById("l-dat").value;
   if(!mid||!dat){alert("Selecione membro e data.");return;}
   var btn=document.getElementById("btn-sl");btn.disabled=true;btn.textContent="Salvando...";
@@ -317,7 +480,6 @@ async function SL(){
   btn.disabled=false;btn.textContent="Salvar lancamento do dia";
 }
 
-function toBR(s){var p=s.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
 function WR(){var n=new Date(),d=n.getDay(),mo=new Date(n);mo.setDate(n.getDate()-(d===0?6:d-1));var su=new Date(mo);su.setDate(mo.getDate()+6);return[mo.toISOString().slice(0,10),su.toISOString().slice(0,10)];}
 function MR(){var n=new Date(),y=n.getFullYear(),m=n.getMonth();return[new Date(y,m,1).toISOString().slice(0,10),new Date(y,m+1,0).toISOString().slice(0,10)];}
 function GL(mid,d1,d2){return S.lan.filter(function(l){return(!mid||l.membro_id===mid)&&l.data>=d1&&l.data<=d2;});}
@@ -360,17 +522,63 @@ function RP(tipo){
   var r=tipo==="semanal"?WR():MR();
   var lbl=tipo==="semanal"?"Semana: "+toBR(r[0])+" a "+toBR(r[1]):MN[new Date().getMonth()]+" "+new Date().getFullYear();
   var h="<div style=\"font-size:13px;color:var(--text2);margin-bottom:14px\">"+lbl+"</div>";
+  var isHead=ME.cargo==="head";
+  var mems=isHead?S.mem:S.mem.filter(function(m){return m.id===ME.id;});
   if(!S.lan.length)h+="<div class=\"card\" style=\"color:var(--text2);font-size:13px\">Nenhum lancamento ainda.</div>";
-  else S.mem.forEach(function(m){h+=MB(m,GL(m.id,r[0],r[1]),tipo);});
+  else mems.forEach(function(m){h+=MB(m,GL(m.id,r[0],r[1]),tipo);});
   document.getElementById(tipo==="semanal"?"sem-c":"men-c").innerHTML=h;
 }
 
+// ── DASHBOARD HEAD ───────────────────────────────────────────
+function renderDash(){
+  var r=MR();
+  var allLan=S.lan.filter(function(l){return l.data>=r[0]&&l.data<=r[1];});
+  var totalLig=sm(allLan,"ligacoes"),totalAg=sm(allLan,"agendamentos"),totalRe=sm(allLan,"reunioes"),totalVe=sm(allLan,"vendas"),totalRc=sm(allLan,"receita");
+  var h="<div style=\"font-family:var(--fd);font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px\">"+MN[new Date().getMonth()]+" "+new Date().getFullYear()+" — Time completo</div>";
+  h+="<div class=\"dash-hero\">";
+  [{l:"Ligacoes",v:totalLig},{l:"Agendamentos",v:totalAg},{l:"Reunioes",v:totalRe},{l:"Vendas",v:totalVe},{l:"Receita R$",v:"R$"+totalRc.toLocaleString("pt-BR")}].forEach(function(c){
+    h+="<div class=\"dash-card\"><div class=\"dash-val\">"+c.v+"</div><div class=\"dash-lbl\">"+c.l+"</div></div>";
+  });
+  h+="</div>";
+  // Conversao geral
+  h+="<div class=\"card\" style=\"margin-bottom:14px\"><div class=\"ct\">Conversao geral do time</div>";
+  var lef=sm(allLan,"ligacoes_efetivas");
+  [[lef,totalLig,"Efetiva / Total"],[totalAg,lef,"Agend / Efetiva"],[totalRe,totalAg,"Reuniao / Agend"],[totalVe,totalRe,"Venda / Reuniao"]].forEach(function(c){
+    h+="<div class=\"cr\"><span>"+c[2]+"</span><span style=\"font-weight:500;color:var(--green)\">"+cv(c[0],c[1])+"</span></div>";
+  });
+  h+="</div>";
+  // Ranking por agendamentos
+  var ranked=S.mem.map(function(m){
+    var lans=GL(m.id,r[0],r[1]);
+    return{nome:m.nome,cargo:m.cargo,ag:sm(lans,"agendamentos"),re:sm(lans,"reunioes"),ve:sm(lans,"vendas"),rc:sm(lans,"receita")};
+  }).sort(function(a,b){return b.ag-a.ag;});
+  h+="<div class=\"card\"><div class=\"ct\">Ranking do time — Agendamentos</div>";
+  ranked.forEach(function(m,i){
+    h+="<div class=\"rank-row\">";
+    h+="<div class=\"rank-num"+(i===0?" first":"")+"\">"+(i+1)+"</div>";
+    h+="<div class=\"avatar\" style=\"width:32px;height:32px;font-size:11px\">"+ini(m.nome)+"</div>";
+    h+="<div style=\"flex:1\"><div style=\"font-size:13px;font-weight:500\">"+m.nome+"</div>";
+    h+="<span class=\"badge "+bc(m.cargo)+"\">"+m.cargo.toUpperCase()+"</span></div>";
+    h+="<div style=\"text-align:right\"><div style=\"font-family:var(--fd);font-size:18px;font-weight:700;color:var(--green)\">"+m.ag+"</div><div style=\"font-size:11px;color:var(--text3)\">agend</div></div>";
+    h+="</div>";
+  });
+  h+="</div>";
+  // Individual por membro
+  h+="<div style=\"font-family:var(--fd);font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin:20px 0 12px\">Detalhe por membro</div>";
+  S.mem.forEach(function(m){h+=MB(m,GL(m.id,r[0],r[1]),"mensal");});
+  document.getElementById("dash-c").innerHTML=h;
+}
+
+// ── CALENDARIO ───────────────────────────────────────────────
 function RC(){
   document.getElementById("cal-t").textContent=MN[S.cm]+" "+S.cy;
   var ds=["Seg","Ter","Qua","Qui","Sex","Sab","Dom"];
   document.getElementById("cal-h").innerHTML=ds.map(function(d){return "<div class=\"cal-h\">"+d+"</div>";}).join("");
   var fd=(new Date(S.cy,S.cm,1).getDay()+6)%7,dim=new Date(S.cy,S.cm+1,0).getDate();
-  var td=new Date().toISOString().slice(0,10),dd=S.lan.map(function(l){return l.data;});
+  var td=new Date().toISOString().slice(0,10);
+  var isHead=ME.cargo==="head";
+  var visLan=isHead?S.lan:S.lan.filter(function(l){return l.membro_id===ME.id;});
+  var dd=visLan.map(function(l){return l.data;});
   var h="";
   for(var i=0;i<fd;i++)h+="<div class=\"cal-d empty\"></div>";
   for(var d=1;d<=dim;d++){
@@ -383,7 +591,8 @@ function RC(){
 function CN(d){S.cm+=d;if(S.cm>11){S.cm=0;S.cy++;}if(S.cm<0){S.cm=11;S.cy--;}RC();document.getElementById("cal-det").innerHTML="";}
 
 function DD(ds){
-  var lans=S.lan.filter(function(l){return l.data===ds;});
+  var isHead=ME.cargo==="head";
+  var lans=S.lan.filter(function(l){return l.data===ds&&(isHead||l.membro_id===ME.id);});
   var det=document.getElementById("cal-det");
   if(!lans.length){det.innerHTML="<div class=\"card\" style=\"font-size:13px;color:var(--text2)\">Sem lancamentos em "+toBR(ds)+".</div>";return;}
   var h="";
@@ -404,22 +613,26 @@ function DD(ds){
   det.innerHTML=h;
 }
 
+// ── METAS ────────────────────────────────────────────────────
 function RM(){
+  var isHead=ME.cargo==="head";
+  var visMet=isHead?S.met:S.met.filter(function(x){return x.membro_id===ME.id;});
   var h="";
-  if(!S.met.length)h="<div style=\"font-size:13px;color:var(--text2)\">Nenhuma meta configurada.</div>";
-  else S.met.forEach(function(meta){
+  if(!visMet.length)h="<div style=\"font-size:13px;color:var(--text2)\">Nenhuma meta configurada.</div>";
+  else visMet.forEach(function(meta){
     var m=S.mem.find(function(x){return x.id===meta.membro_id;});if(!m)return;
     h+="<div class=\"mr\"><div style=\"display:flex;align-items:center;gap:9px\">";
     h+="<div class=\"avatar\" style=\"width:30px;height:30px;font-size:11px\">"+ini(m.nome)+"</div>";
     h+="<div><div style=\"font-size:13px;font-weight:500;color:var(--text)\">"+m.nome+" <span class=\"badge "+bc(m.cargo)+"\">"+m.cargo.toUpperCase()+"</span></div>";
     h+="<div style=\"font-size:12px;color:var(--text3)\">"+meta.periodo.charAt(0).toUpperCase()+meta.periodo.slice(1)+" · Lig:"+meta.ligacoes+" Agend:"+meta.agendamentos+" Reun:"+meta.reunioes+(meta.vendas?" Vend:"+meta.vendas:"")+(meta.receita?" R$:"+meta.receita:"")+"</div></div></div>";
-    h+="<button class=\"btn-danger\" onclick=\"RMeta('"+meta.id+"')\">Remover</button></div>";
+    if(isHead)h+="<button class=\"btn-danger\" onclick=\"RMeta('"+meta.id+"')\">Remover</button>";
+    h+="</div>";
   });
   document.getElementById("met-l").innerHTML=h;
 }
 
 async function SM(){
-  var mid=document.getElementById("m-mem").value,per=document.getElementById("m-per").value;if(!mid)return;
+  var mid=document.getElementById("m-mem").value||ME.id,per=document.getElementById("m-per").value;if(!mid)return;
   var body={id:uid(),membro_id:mid,periodo:per,
     ligacoes:parseInt(document.getElementById("m-lg").value)||0,
     ligacoes_efetivas:parseInt(document.getElementById("m-lef").value)||0,
@@ -441,28 +654,56 @@ async function RMeta(id){
   try{await req("DELETE","metas",null,"id=eq."+id);S.met=S.met.filter(function(x){return x.id!==id;});RM();}catch(e){alert("Erro: "+e.message);}
 }
 
-function RE(){
+// ── ADMIN ────────────────────────────────────────────────────
+function renderAdm(){
   var h="";
   if(!S.mem.length)h="<div style=\"font-size:13px;color:var(--text2)\">Nenhum membro cadastrado.</div>";
   else S.mem.forEach(function(m){
     h+="<div class=\"mr\"><div style=\"display:flex;align-items:center;gap:9px\">";
     h+="<div class=\"avatar\">"+ini(m.nome)+"</div>";
     h+="<div><div style=\"font-size:14px;font-weight:500;color:var(--text)\">"+m.nome+"</div>";
-    h+="<span class=\"badge "+bc(m.cargo)+"\">"+m.cargo.toUpperCase()+"</span></div></div>";
-    h+="<button class=\"btn-danger\" onclick=\"RM2('"+m.id+"')\">Remover</button></div>";
+    h+="<span class=\"badge "+bc(m.cargo)+"\">"+m.cargo.toUpperCase()+"</span>";
+    var st=m.primeiro_acesso||!m.senha?"<span style=\"font-size:11px;color:var(--amber);margin-left:6px\">Aguardando primeiro acesso</span>":"<span style=\"font-size:11px;color:var(--green);margin-left:6px\">Ativo</span>";
+    h+=st+"</div></div>";
+    h+="<div style=\"display:flex;gap:6px\">";
+    h+="<button class=\"btn-ghost\" style=\"padding:4px 10px;font-size:12px\" onclick=\"resetSenha('"+m.id+"')\">Reset senha</button>";
+    h+="<button class=\"btn-danger\" onclick=\"RM2('"+m.id+"')\">Remover</button>";
+    h+="</div></div>";
   });
-  document.getElementById("eq-l").innerHTML=h;
+  document.getElementById("adm-list").innerHTML=h;
 }
+
 async function AM(){
-  var nm=document.getElementById("e-nm").value.trim(),cg=document.getElementById("e-cg").value;
+  var nm=document.getElementById("a-nm").value.trim(),cg=document.getElementById("a-cg").value;
   if(!nm){alert("Digite o nome.");return;}
-  var body={id:uid(),nome:nm,cargo:cg};
-  try{await req("POST","membros",body);S.mem.push(body);RE();PS();document.getElementById("e-nm").value="";setSS("Membro adicionado","ok");}
-  catch(e){alert("Erro: "+e.message);}
+  var body={id:uid(),nome:nm,cargo:cg,senha:null,primeiro_acesso:true};
+  try{
+    await req("POST","membros",body);S.mem.push(body);
+    renderAdm();
+    // Refresh login dropdown
+    var sel=document.getElementById("login-nome");
+    sel.innerHTML=S.mem.map(function(m){return "<option value=\""+m.id+"\">"+m.nome+"</option>";}).join("");
+    document.getElementById("a-nm").value="";
+    var fb=document.getElementById("a-fb");fb.style.display="block";
+    setTimeout(function(){fb.style.display="none";},2000);
+    setSS("Membro cadastrado","ok");
+  }catch(e){alert("Erro: "+e.message);}
 }
+
+async function resetSenha(id){
+  if(!confirm("Resetar a senha deste membro? Ele precisara criar uma nova senha no proximo acesso."))return;
+  try{
+    await req("PATCH","membros",{senha:null,primeiro_acesso:true},"id=eq."+id);
+    var m=S.mem.find(function(x){return x.id===id;});
+    if(m){m.senha=null;m.primeiro_acesso=true;}
+    renderAdm();
+    alert("Senha resetada. O membro devera criar uma nova senha no proximo acesso.");
+  }catch(e){alert("Erro: "+e.message);}
+}
+
 async function RM2(id){
-  if(!confirm("Remover este membro?"))return;
-  try{await req("DELETE","membros",null,"id=eq."+id);S.mem=S.mem.filter(function(x){return x.id!==id;});RE();PS();}
+  if(!confirm("Remover este membro permanentemente?"))return;
+  try{await req("DELETE","membros",null,"id=eq."+id);S.mem=S.mem.filter(function(x){return x.id!==id;});renderAdm();}
   catch(e){alert("Erro: "+e.message);}
 }
 
@@ -477,18 +718,21 @@ function EX(){
   var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="trafega.csv";
   document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
-async function RS(){
-  if(!confirm("Apagar todos os lancamentos e metas?"))return;
-  try{
-    await req("DELETE","lancamentos",null,"id=neq.0");
-    await req("DELETE","metas",null,"id=neq.0");
-    S.lan=[];S.met=[];setSS("Dados resetados","ok");alert("Resetado.");
-  }catch(e){alert("Erro: "+e.message);}
-}
 
+// ── INIT ─────────────────────────────────────────────────────
 document.getElementById("l-dat").value=new Date().toISOString().slice(0,10);
 document.getElementById("m-mem").addEventListener("change",UMF);
-loadAll();
+
+// Check saved session
+(async function(){
+  await initLogin();
+  var saved=localStorage.getItem("trafega_user");
+  if(saved){
+    var m=S.mem.find(function(x){return x.id===saved;});
+    if(m&&m.senha&&!m.primeiro_acesso){ME=m;enterApp();return;}
+  }
+  document.getElementById("login-screen").style.display="flex";
+})();
 </script>
 </body>
 </html>
