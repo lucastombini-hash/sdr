@@ -197,10 +197,17 @@ footer span{font-size:12px;color:var(--text3)}
     </div>
   </div>
   <div class="card">
-    <div class="ct">Agenda e Reunioes</div>
-    <div class="row2">
-      <div><label class="lbl">Agendamentos</label><input type="number" id="l-ag" min="0" placeholder="0"></div>
-      <div><label class="lbl">Reunioes realizadas</label><input type="number" id="l-re" min="0" placeholder="0"></div>
+    <div class="ct">Agendamentos</div>
+    <div style="margin-bottom:0">
+      <label class="lbl">Agendamentos gerados</label>
+      <input type="number" id="l-ag" min="0" placeholder="0">
+    </div>
+  </div>
+  <div class="card" id="reun-card" style="display:none">
+    <div class="ct" id="reun-title">Reunioes realizadas</div>
+    <div style="margin-bottom:0">
+      <label class="lbl" id="reun-label">Reunioes realizadas no dia</label>
+      <input type="number" id="l-re" min="0" placeholder="0">
     </div>
   </div>
   <div class="card" id="cv-card" style="display:none">
@@ -446,7 +453,21 @@ function UF(){
   var el=document.getElementById("l-mem");if(!el)return;
   var mid = el.value || ME.id;
   var m=S.mem.find(function(x){return x.id===mid;});
-  document.getElementById("cv-card").style.display=(m&&m.cargo==="closer")?"block":"none";
+  var isCloser=(m&&m.cargo==="closer");
+  var isSdr=(m&&m.cargo==="sdr");
+  document.getElementById("cv-card").style.display=isCloser?"block":"none";
+  document.getElementById("reun-card").style.display=(isCloser||isSdr)?"block":"none";
+  var title=document.getElementById("reun-title");
+  var lbl=document.getElementById("reun-label");
+  if(title&&lbl){
+    if(isSdr){
+      title.textContent="Agendamentos realizados";
+      lbl.textContent="Dos agendamentos gerados, quantos o lead compareceu";
+    } else {
+      title.textContent="Reunioes realizadas";
+      lbl.textContent="Reunioes realizadas no dia";
+    }
+  }
 }
 function UMF(){
   var el=document.getElementById("m-mem");if(!el)return;
@@ -494,27 +515,32 @@ function MB(m,lans,per){
   var meta=S.met.find(function(x){return x.membro_id===m.id&&x.periodo===per;});
   var lig=sm(lans,"ligacoes"),lef=sm(lans,"ligacoes_efetivas"),ag=sm(lans,"agendamentos"),re=sm(lans,"reunioes"),ve=sm(lans,"vendas"),rc=sm(lans,"receita");
   var isc=m.cargo==="closer";
+  var isSdr=m.cargo==="sdr";
+  var reLabel=isSdr?"Agend Realizados":"Reunioes";
   var h="<div class=\"mb\">";
   h+="<div style=\"display:flex;align-items:center;gap:10px;margin-bottom:14px\">";
   h+="<div class=\"avatar\">"+ini(m.nome)+"</div>";
   h+="<div><div style=\"font-size:14px;font-weight:500;color:var(--text)\">"+m.nome+"</div>";
   h+="<span class=\"badge "+bc(m.cargo)+"\">"+m.cargo.toUpperCase()+"</span></div></div>";
   if(meta){
-    var its=[{l:"Ligacoes",v:lig,t:meta.ligacoes},{l:"Efetivas",v:lef,t:meta.ligacoes_efetivas},{l:"Agendamentos",v:ag,t:meta.agendamentos},{l:"Reunioes",v:re,t:meta.reunioes}];
+    var its=[{l:"Ligacoes",v:lig,t:meta.ligacoes},{l:"Efetivas",v:lef,t:meta.ligacoes_efetivas},{l:"Agendamentos",v:ag,t:meta.agendamentos},{l:reLabel,v:re,t:meta.reunioes}];
     if(isc&&meta.vendas)its.push({l:"Vendas",v:ve,t:meta.vendas});
     if(isc&&meta.receita)its.push({l:"Receita R$",v:rc,t:meta.receita});
     h+="<div class=\"mgrid\">";
     its.forEach(function(it){h+="<div class=\"metric\"><div class=\"ml\">"+it.l+"</div><div style=\"font-size:17px;font-weight:500;color:var(--text)\">"+it.v+(it.t?"<span style=\"font-size:11px;color:var(--text3)\"> /"+it.t+"</span>":"")+"</div>"+(it.t?PB(it.v,it.t):"")+"</div>";});
     h+="</div>";
   }else{
-    var ms=[{l:"Ligacoes",v:lig},{l:"Efetivas",v:lef},{l:"Agendamentos",v:ag},{l:"Reunioes",v:re}];
+    var ms=[{l:"Ligacoes",v:lig},{l:"Efetivas",v:lef},{l:"Agendamentos",v:ag},{l:reLabel,v:re}];
     if(isc&&(ve||rc)){ms.push({l:"Vendas",v:ve});ms.push({l:"Receita R$",v:"R$"+rc.toLocaleString("pt-BR")});}
     h+="<div class=\"mgrid\">"+ms.map(function(c){return "<div class=\"metric\"><div class=\"ml\">"+c.l+"</div><div class=\"mv\">"+c.v+"</div></div>";}).join("")+"</div>";
   }
   h+="<div style=\"background:var(--surface2);border-radius:var(--r);padding:10px 12px;margin-top:4px\">";
   h+="<div style=\"font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px\">Taxas de conversao</div>";
-  [[lef,lig,"Efetiva/Total"],[ag,lef,"Agend/Efetiva"],[re,ag,"Reuniao/Agend"]].forEach(function(c){h+="<div class=\"cr\"><span>"+c[2]+"</span><span style=\"font-weight:500;color:var(--green)\">"+cv(c[0],c[1])+"</span></div>";});
-  if(isc&&ve)h+="<div class=\"cr\"><span>Venda/Reuniao</span><span style=\"font-weight:500;color:var(--green)\">"+cv(ve,re)+"</span></div>";
+  var convs=[[lef,lig,"Efetiva/Total"],[ag,lef,"Agend/Efetiva"]];
+  if(isSdr)convs.push([re,ag,"Show Rate (agend realizados)"]);
+  if(isc)convs.push([re,ag,"Reuniao/Agend"]);
+  if(isc&&ve)convs.push([ve,re,"Venda/Reuniao"]);
+  convs.forEach(function(c){h+="<div class=\"cr\"><span>"+c[2]+"</span><span style=\"font-weight:500;color:var(--green)\">"+cv(c[0],c[1])+"</span></div>";});
   h+="</div></div>";return h;
 }
 
@@ -533,17 +559,24 @@ function RP(tipo){
 function renderDash(){
   var r=MR();
   var allLan=S.lan.filter(function(l){return l.data>=r[0]&&l.data<=r[1];});
-  var totalLig=sm(allLan,"ligacoes"),totalAg=sm(allLan,"agendamentos"),totalRe=sm(allLan,"reunioes"),totalVe=sm(allLan,"vendas"),totalRc=sm(allLan,"receita");
+  var closerIds=S.mem.filter(function(m){return m.cargo==="closer";}).map(function(m){return m.id;});
+  var closerLan=allLan.filter(function(l){return closerIds.indexOf(l.membro_id)>=0;});
+  var totalLig=sm(allLan,"ligacoes"),totalAg=sm(allLan,"agendamentos");
+  var totalRe=sm(closerLan,"reunioes"),totalVe=sm(closerLan,"vendas"),totalRc=sm(closerLan,"receita");
   var h="<div style=\"font-family:var(--fd);font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px\">"+MN[new Date().getMonth()]+" "+new Date().getFullYear()+" — Time completo</div>";
   h+="<div class=\"dash-hero\">";
-  [{l:"Ligacoes",v:totalLig},{l:"Agendamentos",v:totalAg},{l:"Reunioes",v:totalRe},{l:"Vendas",v:totalVe},{l:"Receita R$",v:"R$"+totalRc.toLocaleString("pt-BR")}].forEach(function(c){
+  var showRate=totalAg>0?Math.round((totalAgReal/totalAg)*100)+"%":"—";
+  [{l:"Ligacoes",v:totalLig},{l:"Agendamentos",v:totalAg},{l:"Show Rate",v:showRate},{l:"Reunioes",v:totalRe},{l:"Vendas",v:totalVe},{l:"Receita R$",v:"R$"+totalRc.toLocaleString("pt-BR")}].forEach(function(c){
     h+="<div class=\"dash-card\"><div class=\"dash-val\">"+c.v+"</div><div class=\"dash-lbl\">"+c.l+"</div></div>";
   });
   h+="</div>";
   // Conversao geral
   h+="<div class=\"card\" style=\"margin-bottom:14px\"><div class=\"ct\">Conversao geral do time</div>";
   var lef=sm(allLan,"ligacoes_efetivas");
-  [[lef,totalLig,"Efetiva / Total"],[totalAg,lef,"Agend / Efetiva"],[totalRe,totalAg,"Reuniao / Agend"],[totalVe,totalRe,"Venda / Reuniao"]].forEach(function(c){
+  var sdrIds=S.mem.filter(function(m){return m.cargo==="sdr";}).map(function(m){return m.id;});
+  var sdrLan2=allLan.filter(function(l){return sdrIds.indexOf(l.membro_id)>=0;});
+  var totalAgReal=sm(sdrLan2,"reunioes");
+  [[lef,totalLig,"Efetiva / Total"],[totalAg,lef,"Agend / Efetiva (SDR)"],[totalAgReal,totalAg,"Show Rate (Agend Realizados)"],[totalRe,totalAgReal,"Reuniao / Agend (Closer)"],[totalVe,totalRe,"Venda / Reuniao"]].forEach(function(c){
     h+="<div class=\"cr\"><span>"+c[2]+"</span><span style=\"font-weight:500;color:var(--green)\">"+cv(c[0],c[1])+"</span></div>";
   });
   h+="</div>";
